@@ -1,7 +1,7 @@
 # Lemonade Stand Python
 my own take on the original Lemonade Stand game, written in python
 
-currently untested but should theoretically work
+everything works, except for the algorithm
 
 ## TO DO
 - [x] import 'random' source code to become independant
@@ -22,7 +22,7 @@ currently untested but should theoretically work
 - [x] negative input exception handling
 - [x] non-int input exception handling
 - [x] cross recursion handling of non-int, out of range, and negative exception handling
-- [ ] debug
+- [x] debug
 - [ ] perfect the algorithm
 
 
