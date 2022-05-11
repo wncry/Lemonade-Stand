@@ -27,10 +27,11 @@ everything works, except for the algorithm
 
 
 ## time spent
-- Tues May 10:
+- Tues May 10: 7 hours
   - 2:20-6:20
   - 7:40-10:40
-- Wed May 11:
+- Wed May 11: 7.5 hours (so far)
   - 10:00-12:30
-  - 1:10-
+  - 1:10-6:10
+  - 7:00
 
