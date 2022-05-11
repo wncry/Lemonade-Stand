@@ -19,9 +19,9 @@ currently untested but should theoretically work
 - [x] make sure code does not reach recursive depth limit o_o
 - [x] universal chance of rain
 - [x] morning forecast
-- [ ] negative input exception handling
+- [x] negative input exception handling
 - [x] non-int input exception handling
-- [ ] cross recursion handling of non-int, out of range, and negative exception handling
+- [x] cross recursion handling of non-int, out of range, and negative exception handling
 
 time spent:
 - Tues May 10:
