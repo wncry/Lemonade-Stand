@@ -9,7 +9,7 @@ currently non-working and untested
 - [x] update thunderstorm handling to enable recursion
 - [x] create morning()
 - [x] fix recursion exiting
-- [ ] optimize global variables
+- [x] optimize global variables
 - [x] insert joke here
 - [ ] disable beginner bonus
 - [x] universal weather
