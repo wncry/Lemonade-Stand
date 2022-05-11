@@ -22,8 +22,10 @@ currently untested but should theoretically work
 - [x] negative input exception handling
 - [x] non-int input exception handling
 - [x] cross recursion handling of non-int, out of range, and negative exception handling
+- [ ] debug
 
-time spent:
+
+## time spent
 - Tues May 10:
   - 2:20-6:20
   - 7:40-10:40
