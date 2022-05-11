@@ -1,7 +1,7 @@
 # Lemonade Stand Python
 my own take on the original Lemonade Stand game, written in python
 
-currently non-working and untested
+currently untested but should theoretically work
 
 ## TO DO
 - [x] import 'random' source code to become independant
@@ -21,11 +21,11 @@ currently non-working and untested
 - [x] morning forecast
 - [ ] negative input exception handling
 - [x] non-int input exception handling
-- [ ] cross recursion handling
+- [x] cross recursion handling of exception handling
 
 time spent:
 - Tues May 10:
   - 2:20-6:20
   - 7:40-10:40
 - Wed May 11:
-  - 10:00-
+  - 10:00-12:30
