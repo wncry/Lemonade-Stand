@@ -11,7 +11,7 @@ currently untested but should theoretically work
 - [x] fix recursion exiting
 - [x] optimize global variables
 - [x] insert joke here
-- [ ] disable beginner bonus
+- [ ] implement system for beginner bonus
 - [x] universal weather
 - [x] negative profit exception handling
 - [x] if sign number = 0 exception handling
@@ -23,6 +23,7 @@ currently untested but should theoretically work
 - [x] non-int input exception handling
 - [x] cross recursion handling of non-int, out of range, and negative exception handling
 - [ ] debug
+- [ ] perfect the algorithm
 
 
 ## time spent
