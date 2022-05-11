@@ -21,7 +21,7 @@ currently untested but should theoretically work
 - [x] morning forecast
 - [ ] negative input exception handling
 - [x] non-int input exception handling
-- [x] cross recursion handling of exception handling
+- [ ] cross recursion handling of non-int, out of range, and negative exception handling
 
 time spent:
 - Tues May 10:
@@ -29,3 +29,4 @@ time spent:
   - 7:40-10:40
 - Wed May 11:
   - 10:00-12:30
+  - 1:10-
