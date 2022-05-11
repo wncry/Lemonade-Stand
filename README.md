@@ -19,5 +19,9 @@ currently non-working and untested
 - [x] make sure code does not reach recursive depth limit o_o
 - [ ] universal chance of rain
 
-total time spent:
-7 hours
+time spent:
+- Tues May 10:
+  - 2:20-6:20
+  - 7:40-10:40
+- Wed May 11:
+  - 10:00-
