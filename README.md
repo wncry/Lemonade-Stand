@@ -13,7 +13,7 @@ currently untested but should theoretically work
 - [x] insert joke here
 - [ ] disable beginner bonus
 - [x] universal weather
-- [ ] negative profit exception handling
+- [x] negative profit exception handling
 - [x] if sign number = 0 exception handling
 - [x] recursive budget_error handling
 - [x] make sure code does not reach recursive depth limit o_o
