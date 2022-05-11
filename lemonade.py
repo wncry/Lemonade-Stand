@@ -14,6 +14,9 @@
 # yes, i am aware python comes with random preinstalled, but it is much more difficult to
 # compile a .py file with imports into an app compared to a .py file without imports
 
+# integer checking system provided by https://stackoverflow.com/users/32538/kirk-strauser
+# on https://stackoverflow.com/questions/19671149/python-int-and-input
+
 # UPDATE: unused
 # float rounding provided by https://stackoverflow.com/users/5190/vinko-vrsalovic
 # and https://stackoverflow.com/users/1901786/whereswalden
@@ -25,6 +28,7 @@
 
 
 # ENV VAR
+
 ARBITRARY_BALANCE = 0
 CLOUDY_BALANCE = 1
 SUNNY_BALANCE = 2
@@ -50,27 +54,27 @@ day_count = 0
 recursion_depth_count = 0  # day number
 
 ### TO DO
-# --- 1. import 'random' source code to become independant
-# 2. update streetcrew handling to enable recursion
-# 3. update thunderstorm handling to enable recursion
-# 4. create morning()
-# 5. fix recursion exiting
-# 6. fix global variables
-# --- 7. insert joke here
-# 8. increase 'glasses_cost' on day 3 morning
-# 9. universal weather
-# 10. negative profit exception handling
-# 11. if sign number = 0, glasses_sold -= glasses_sold/2
-# --- 12. recursive budget error handling
-# 13. make sure code does not reach recursive depth limit o_o
-# 14. universal chance of rain
+# - [x] import 'random' source code to become independant
+# - [x] update streetcrew handling to enable recursion
+# - [x] update thunderstorm handling to enable recursion
+# - [x] create morning()
+# - [x] fix recursion exiting
+# - [x] optimize global variables
+# - [x] insert joke here
+# - [ ] increase 'glasses_cost' to disable beginner bonus
+# - [x] universal weather
+# - [ ] negative profit exception handling
+# - [x] if sign number = 0 exception handling
+# - [x] recursive budget error handling
+# - [x] make sure code does not reach recursive depth limit o_o
+# - [x] universal chance of rain
+# - [x] morning forecast
+# - [ ] negative input exception handling
+# - [x] non-int input exception handling
+# - [x] cross recursion handling
 
 
-# 4 hours
-# 3 hours
-
-
-# RANDOM INPORT
+# RANDOM NUMBER GENERATOR
 def randint(a, b):
     return a + randbelow(b - a + 1)
 def randbelow(n):
@@ -87,9 +91,7 @@ def random_bytes(n):
     with open('/dev/urandom', 'rb') as file:
         return file.read(n)
 
-
 # WORKDAY
-
 def weather():  # weather handling
     weather_factor = randint(0, 9)
     weather_state = 0
@@ -101,53 +103,122 @@ def weather():  # weather handling
         weather_state += HD_BALANCE
     return weather_state
 
+# err handling
 
-budget_err_external_var = 0
-def budget_err(budget_err_inp, budget_err_var_1, budget_err_var_2):
-    budget_err_var = int(input(budget_err_inp))
-    if (budget_err_var * budget_err_var_1) > budget_err_var_2:
-        print('\nyou dont have budget for that')
-        budget_err(budget_err_inp, budget_err_var_1, budget_err_var_2)
-    else:
-        global budget_err_external_var
-        budget_err_external_var += budget_err_var
-    return
+### err handling requirements
+# 1. is int
+# 2. is positive
+# 3. is in range 
 
-def morning():
-    morning_forecast = weather()
+budget_err_external_var = 0  # possible error of crosswriting to external variables
+def budget_err(budget_err_inp, budget_err_var_1, budget_err_var_2, print2, is_cross_recursing, *, recursive_inp):  # not in range
+    
+    budget_err_var = int(input(budget_err_inp))  # input
+    
+    try: int_budget_err_var = int(budget_err_var)  # checks if integer
+    except ValueError:  # not integer
+        print3 = '\nhow many glasses of lemonade (${} each) would you like to make?: '.format(glasses_cost)
+        input_err(print3, True, budget_err_var)  # redo integer check
+        int_budget_err_var = input_err_external_var
+        global input_err_external_var
+        input_err_external_var -= input_err_external_var
+    else:  # is integer
+        if (budget_err_var * budget_err_var_1) > budget_err_var_2:  # check if in range
+            print(print2)
+            budget_err(budget_err_inp, budget_err_var_1, budget_err_var_2, False)  # not in range
+        else:  # in range
+            global budget_err_external_var  # is integer and in range
+            budget_err_external_var += int_budget_err_var # exits
 
-    print('\n\nGOOD MORNING\ncurrent balance: {}'.format(total_profit))
+input_err_external_var = 0  # possible error of crosswriting to external variables
+def input_err(print3, is_cross_recursing, *, recursive_inp):  # not integer
+    print('\n[!] invalid integer')
+    inp_val = input(print3)  # input
+    try: int_inp_val = int(inp_val)  # checks if integer
+    except ValueError:  # not integer
+        input_err(print3, False)  # redo integer check
+    else:  # is integer
 
-    if morning_forecast == 1:
+        ###
+        if (int_inp_val * glasses_cost) > total_profit:  # check if in range
+            print1 = '\nhow many glasses of lemonade (${} each) would you like to make?: '.format(glasses_cost)
+            print2 = '\n[!] you dont have enough money'
+            print(print2)
+            budget_err(print1, glasses_cost, total_profit - sign_cost, print2, False)  # not in range
+
+            int_inp_val = budget_err_external_var  # write and wipe
+            global budget_err_external_var
+            budget_err_external_var -= budget_err_external_var
+
+        elif (int_inp_val * glasses_cost) > (total_profit - sign_cost):  # check if in range
+            print1 = '\nhow many glasses of lemonade (${} each) would you like to make?: '.format(glasses_cost)
+            print2 = '\n[!] you wont have enough money to purchase advertising signs'
+            print(print2)
+            budget_err(print1, glasses_cost, total_profit - sign_cost, print2, False)  # not in range
+
+            int_inp_val = budget_err_external_var  # write and wipe
+            global budget_err_external_var
+            budget_err_external_var -= budget_err_external_var
+        ###
+
+        global input_err_external_var  # is integer and in range
+        input_err_external_var += int_inp_val  # exits
+
+def morning(morning_forecast):
+    if morning_forecast == CLOUDY_BALANCE:
         morn_state = 'cloudy'
-        morn_chance_of_rain = randint(40, 90)
-    elif morning_forecast == 2:
+        morn_chance_of_rain = randint(40, 100)
+    elif morning_forecast == SUNNY_BALANCE:
         morn_state = 'sunny'
         morn_chance_of_rain = randint(2, 12)
-    elif morning_forecast == 3:
+    elif morning_forecast == HD_BALANCE:
         morn_state = 'hot and dry'
         morn_chance_of_rain = 0
+
+    print('''
+GOOD MORNING
+current balance: {}
+
+morning forecast: {}
+chance of rain: {}
+'''.format(total_profit, morn_state, morn_chance_of_rain))
     
     # glasses made
-    morn_glasses = int(input('how many glasses of lemonade (${} each) would you like to make?: '.format(glasses_cost)))
-    if (morn_glasses * glasses_cost) > total_profit:
-        print('you dont have enough money!')
-        budget_err('how many glasses of lemonade (${} each) would you like to make?: '.format(glasses_cost), glasses_cost, total_profit - sign_cost)
-        morn_glasses = budget_err_external_var
+    morn_glasses = input('how many glasses of lemonade (${} each) would you like to make?: '.format(glasses_cost))
+
+    try: int_morn_glasses = int(morn_glasses)
+    except ValueError:
+        print3 = '\nhow many glasses of lemonade (${} each) would you like to make?: '.format(glasses_cost)
+        input_err(print3)
+        int_morn_glasses = input_err_external_var
+        global input_err_external_var
+        input_err_external_var -= input_err_external_var
+
+    if (int_morn_glasses * glasses_cost) > total_profit:
+        print1 = '\nhow many glasses of lemonade (${} each) would you like to make?: '.format(glasses_cost)
+        print2 = '\n[!] you dont have enough money'
+        print(print2)
+        budget_err(print1, glasses_cost, total_profit - sign_cost, print2, False)
+        int_morn_glasses = budget_err_external_var
         global budget_err_external_var
         budget_err_external_var -= budget_err_external_var
-    elif (morn_glasses * glasses_cost) > (total_profit - sign_cost):
-        print('you wont have enough money to purchase advertising signs!')
-        budget_err('how many glasses of lemonade (${} each) would you like to make?: '.format(glasses_cost), glasses_cost, total_profit - sign_cost)
-        morn_glasses = budget_err_external_var
+    elif (int_morn_glasses * glasses_cost) > (total_profit - sign_cost):
+        print1 = '\nhow many glasses of lemonade (${} each) would you like to make?: '.format(glasses_cost)
+        print2 = '\n[!] you wont have enough money to purchase advertising signs'
+        print(print2)
+        budget_err(print1, glasses_cost, total_profit - sign_cost, print2, False)
+        int_morn_glasses = budget_err_external_var
         global budget_err_external_var
         budget_err_external_var -= budget_err_external_var
+
 
     # signs made
     morn_ads = int(input('how many advertising signs (${} each) would you like to make?: '.format(sign_cost)))
     if (morn_ads * sign_cost) > (total_profit):
-        print('you dont have enough money!')
-        budget_err('how many advertising signs (${} each) would you like to make?: '.format(sign_cost), glasses_cost, total_profit)
+        print1 = '\nhow many advertising signs (${} each) would you like to make?: '.format(sign_cost)
+        print2 = '\n[!] you dont have enough money'
+        print(print2)
+        budget_err(print1, glasses_cost, total_profit, print2, False)
         morn_ads = budget_err_external_var
         global budget_err_external_var
         budget_err_external_var -= budget_err_external_var
@@ -156,21 +227,32 @@ def morning():
     morn_cost = int(input('how much would you like to charge (in cents) per glass of lemonade?: '))
     print()
 
-    day(morn_glasses, morn_ads, morn_cost, morning_forecast)
+    global recursion_depth_count
+    recursion_depth_count += 1
 
-def day(glasses_made, signs_made, price_charged, weather_state):
+    day(int_morn_glasses, morn_ads, morn_cost, morning_forecast, morn_chance_of_rain)
+    return
+
+def day(glasses_made, signs_made, price_charged, weather_state, chance_of_rain):
+    
+    # EVENTS
 
     # streetcrew handling
     street_crew_chance = randint(0, 99)
     if street_crew_chance >= 95:  # 5% chance
-        revenue += (glasses_made * price_charged)
-        #break --> restart func
-
+        revenue = (glasses_made * price_charged)
+        expenses = (signs_made * sign_cost) + (glasses_made + glasses_cost)
+        profit = revenue - expenses
+        revenue_report(glasses_made, signs_made, price_charged, revenue, expenses, profit, weather_state, chance_of_rain)
+        return
+    
     # thunderstorm handling
-    thunderstorm_state = randint(0, 99)
-    if weather_state == CLOUDY_BALANCE and thunderstorm_state >= 90:  # 3% chance 
-        revenue += 0
-        #break --> restart func
+    if chance_of_rain > 90:  # 5.5¯% chance 
+        revenue = 0
+        expenses = (signs_made * sign_cost) + (glasses_made + glasses_cost)
+        profit = revenue - expenses
+        revenue_report(glasses_made, signs_made, price_charged, revenue, expenses, profit, weather_state, chance_of_rain)
+        return
 
 
     # ALGORITHM
@@ -187,41 +269,34 @@ def day(glasses_made, signs_made, price_charged, weather_state):
 
     # user-set sale handling
     glasses_sold = (weather_state * (sales_factor + (sales_factor * sign_mod_result))) - ARBITRARY_BALANCE
+    if signs_made <= 0:
+        glasses_sold -= glasses_sold/2
 
     # final sums
     revenue = min(glasses_made - glasses_sold) * price_charged
     expenses = (signs_made * sign_cost) + (glasses_made + glasses_cost)
     profit = revenue - expenses
 
+    revenue_report(glasses_made, signs_made, price_charged, revenue, expenses, profit, weather_state, chance_of_rain)
+    return
+
+def revenue_report(fin_glasses, fin_signs, fin_price, fin_rev, fin_exp, fin_profit, fin_weather_state, chance_of_rain):
 
     # progress tracking
     global total_revenue 
-    total_revenue += revenue
+    total_revenue += fin_rev
     global total_expenses
-    total_expenses += expenses  # TO DO 6.
+    total_expenses += fin_exp
     global total_profit
-    total_profit += profit
+    total_profit += fin_profit
     global day_count
     day_count += 1
     global recursion_depth_count
     recursion_depth_count += 1
 
-    revenue_report(glasses_made, signs_made, price_charged, revenue, expenses, profit, weather_state)
-
-    return profit  # TO DO 5.
-
-
-def revenue_report(fin_glasses, fin_signs, fin_price, fin_rev, fin_exp, fin_profit, fin_weather_state):
-
-    if fin_weather_state == 1:
-        fin_state = 'cloudy'
-        chance_of_rain = randint(40, 90)
-    elif fin_weather_state == 2:
-        fin_state = 'sunny'
-        chance_of_rain = randint(2, 12)
-    elif fin_weather_state == 3:
-        fin_state = 'hot and dry'
-        chance_of_rain = 0
+    if fin_weather_state == 1: fin_state = 'cloudy'
+    elif fin_weather_state == 2: fin_state = 'sunny'
+    elif fin_weather_state == 3: fin_state = 'hot and dry'
 
     global day_count
     global total_profit
@@ -251,17 +326,13 @@ current balance {}
     if end == 'esc':
         return fin_profit
     else:
-        day(fin_glasses, fin_signs, fin_price)
+        global recursion_depth_count
+        recursion_depth_count += 1
+        morning(weather())
+        return
 
-
-# DAY ONE USR INPUT
-
-usr_glasses_made = 20
-usr_signs_made = 5
-usr_price_charged = 10
-
-# CALL MORNING
-profit = day(usr_glasses_made, usr_signs_made, usr_price_charged, weather())
+# DAY ONE
+morning(weather())
 
 print(
 '''
@@ -275,5 +346,5 @@ total profit: {}
 
 recursion depth count: {}
 >----------<
-'''.format(day_count, total_revenue, total_expenses, profit, recursion_depth_count))
+'''.format(day_count, total_revenue, total_expenses, total_profit, recursion_depth_count))
 
