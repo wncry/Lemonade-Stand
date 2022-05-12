@@ -29,7 +29,6 @@
 
 # in case of stack overflow https://stackoverflow.com/questions/3323001/what-is-the-maximum-recursion-depth-in-python-and-how-to-increase-it
 
-
 from time import sleep
 
 # ENV VAR
@@ -44,7 +43,6 @@ total_expenses = 0
 total_profit = init_assets
 day_count = 0
 recursion_depth_count = 0
-
 
 # RANDOM NUMBER GENERATOR
 def randint(a, b):
@@ -70,6 +68,7 @@ def random_bytes(n):
 class wowthisisugly(Exception): pass
 err_external_var = 0 
 def err(print1, is_):
+    global err_external_var
     err_var = input(print1)  # input
     try: int_err_var = int(err_var)  # check if integer
     except ValueError:  # not integer
@@ -89,9 +88,7 @@ def err(print1, is_):
             print('[!] cannot accept negative integer')
             err(print1, 0)  # not positive
         else:  # positive integer and in range
-            global err_external_var
             err_external_var += int_err_var
-
 
 # WEATHER HANDLING
 def weather():
@@ -155,7 +152,11 @@ def morning(morning_forecast):
         
         #intro
     elif day_count == 2:
-        print('> your mom (lol) stops paying for your sugar :/')
+        print('> because your lemonade stand operates in a very windy location, all advertising signs get blown away overnight')
+        sleep(2)
+        print('> you will need to purchase new signs each day to still get advertised')
+        sleep(2)
+        print('> your mom (lol) stopped paying for your sugar, but still supports you :]')
         glass_cost += 0.03
     elif day_count == 8:
         print('> lemonade is on sale today :D')
@@ -212,7 +213,6 @@ recursion depth count: {recursion_depth_count}
         sleep(3)
         print('> hello world')
         return
-
     sleep(3)
     
     # chance of rain
@@ -303,21 +303,16 @@ chance of rain: {morn_chance_of_rain}%
         else:
             int_morn_cost = err_external_var  # write and wipe
             err_external_var -= err_external_var
-
-    # DEBUGGING
-    # int_morn_glasses = 20
-    # int_morn_ads = 3
     int_morn_cost = int_morn_cost
-
     int_morn_cost *= 0.01
 
     recursion_depth_count += 1
-
     day(int_morn_glasses, int_morn_ads, int_morn_cost, morning_forecast, morn_chance_of_rain)
     return
 
 # CALCULATIONS
 def day(glasses_made, signs_made, price_charged, weather_state, chance_of_rain):
+    global recursion_depth_count
     
     # EVENTS
     # streetcrew handling
@@ -338,7 +333,6 @@ def day(glasses_made, signs_made, price_charged, weather_state, chance_of_rain):
         revenue_report(glasses_made, signs_made, price_charged, revenue, expenses, profit, weather_state, chance_of_rain)
         return
 
-
     # ALGORITHM (check out algorithm.py for more information)
     demand = 10 * weather_state  # sales factor and sign factor took the longest by far
     sales_factor = (10-glass_cost)/((10 * price_charged)*.1*demand)+demand
@@ -346,21 +340,17 @@ def day(glasses_made, signs_made, price_charged, weather_state, chance_of_rain):
     glasses_sold = int(sales_factor+(sales_factor*sign_factor))
     if signs_made <= 0: glasses_sold = int(glasses_sold/2.5)
 
-
     # FINAL SUMS
     revenue = min(glasses_made,glasses_sold)*price_charged
     expenses = (signs_made*sign_cost)+(glasses_made * glass_cost)
     profit = revenue-expenses
 
-    global recursion_depth_count
     recursion_depth_count += 1
-
     revenue_report(glasses_made, signs_made, price_charged, revenue, expenses, profit, weather_state, chance_of_rain)
     return
 
 # SUMMARY
 def revenue_report(fin_glasses, fin_signs, fin_price, fin_rev, fin_exp, fin_profit, fin_weather_state, chance_of_rain):
-    # globalizing vars
     global total_revenue
     global total_expenses
     global total_profit
