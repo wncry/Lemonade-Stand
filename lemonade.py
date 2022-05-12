@@ -152,9 +152,9 @@ def morning(morning_forecast):
 > these are your stats so far:
 >---------->
 total days open: {day_count}
-total revenue: {float("%.2f" % total_revenue)}
-total expenses: {float("%.2f" % total_expenses)}
-total profit: {float("%.2f" % total_profit)}
+total revenue: {"%.2f" % total_revenue}
+total expenses: {"%.2f" % total_expenses}
+total profit: {"%.2f" % total_profit}
 
 recursion depth count: {recursion_depth_count}
 >----------<
@@ -197,7 +197,7 @@ recursion depth count: {recursion_depth_count}
     print(f'''
 >---------->
 DAYS OPEN: {day_count}
-current balance: ${float("%.2f" % total_profit)}
+current balance: ${"%.2f" % total_profit}
 
 morning forecast: {morn_state}
 chance of rain: {morn_chance_of_rain}%
@@ -205,7 +205,7 @@ chance of rain: {morn_chance_of_rain}%
 ''')
     
     # glasses made
-    print1 = 'how many glasses of lemonade (${} each) would you like to make?: '.format(glass_cost)
+    print1 = 'how many glasses of lemonade (${} each) would you like to make?: '.format("%.2f" % glass_cost)
     morn_glasses = input(print1)
 
     try:
@@ -235,7 +235,7 @@ chance of rain: {morn_chance_of_rain}%
             err_external_var -= err_external_var
 
     # signs made
-    print3 = 'how many advertising signs (${} each) would you like to make?: '.format(sign_cost)
+    print3 = 'how many advertising signs (${} each) would you like to make?: '.format("%.2f" % sign_cost)
     morn_ads = input(print3)
 
     try: int_morn_ads = int(morn_ads)  # checks if integer
@@ -283,13 +283,13 @@ def day(glasses_made, signs_made, price_charged, weather_state, chance_of_rain):
     
     # EVENTS
     # streetcrew handling
-    street_crew_chance = True#randint(0, 99)
-    if street_crew_chance: #>= 95:  # 5% chance
+    street_crew_chance = randint(0, 99)
+    if street_crew_chance >= 95:  # 5% chance
         revenue = (glasses_made * price_charged)
         expenses = (signs_made * sign_cost) + (glasses_made * glass_cost)
         profit = revenue - expenses
-        print('\n\na street crew just finished their shift.\nthey bought all of your lemonade! STONKS')
         sleep(2)
+        print('\n\na street crew just finished their shift.\nthey bought all of your lemonade! STONKS')
         revenue_report(glasses_made, signs_made, price_charged, revenue, expenses, profit, weather_state, chance_of_rain, glasses_made)
         return
     # thunderstorm handling
@@ -347,15 +347,15 @@ chance of rain: {chance_of_rain}%
 
 glasses made: {fin_glasses}
 advertisements made: {fin_signs}
-price charged: ${float("%.2f" % fin_price)}
+price charged: ${"%.2f" % fin_price}
 
 glasses sold: {fin_glasses_sold}
 
-revenue: ${float("%.2f" % fin_rev)}
-expenses: ${float("%.2f" % fin_exp)}
-profit: ${float("%.2f" % fin_profit)}
+revenue: ${"%.2f" % fin_rev}
+expenses: ${"%.2f" % fin_exp}
+profit: ${"%.2f" % fin_profit}
 
-current balance ${float("%.2f" % total_profit)}
+current balance ${"%.2f" % total_profit}
 >----------<
 ''')
 
@@ -366,9 +366,9 @@ current balance ${float("%.2f" % total_profit)}
 FINAL STATS
 
 total days open: {day_count}
-total revenue: ${float("%.2f" % total_revenue)}
-total expenses: ${float("%.2f" % total_expenses)}
-total profit: ${float("%.2f" % total_profit)}
+total revenue: ${"%.2f" % total_revenue}
+total expenses: ${"%.2f" % total_expenses}
+total profit: ${"%.2f" % total_profit}
 
 recursion depth count: {recursion_depth_count}
 >----------<
@@ -425,7 +425,7 @@ if not skip.lower().startswith('n'):
 sleep(3)
 print('> running a lemonade stand takes a lot of work, so make sure you are up to the task!')
 sleep(3)
-print('> make sure to stay safe, and have fun!')
+print('> stay safe, and have fun!')
 
 
 morning(weather())
