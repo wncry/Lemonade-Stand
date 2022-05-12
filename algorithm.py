@@ -1,3 +1,5 @@
+# .wncry
+# licensed under GNU GPLv2.0
 
 # INPUT
 glasses_made = 115
