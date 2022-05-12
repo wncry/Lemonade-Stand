@@ -13,7 +13,7 @@ weather_state = 30
 
 # ALGORITHM (i may have easily spent 7 hours working on this lol)
 demand = 10 * weather_state  # demand fluctuates based on weather
-sales_factor = (10-glass_cost)/((10 * price_charged)*.1*demand)+demand  # sales factor equasion
+sales_factor = (10-glass_cost)/((10*price_charged)*.1*demand)+demand  # sales factor equasion
 sign_factor = 1-(2.7**(-signs_made*.5))  # sigmoid function (kinda)
 glasses_sold = int(sales_factor+(sales_factor*sign_factor))  # factor application
 if signs_made <= 0: glasses_sold = int(glasses_sold/2.5)  # lack of signs directly influence sales
