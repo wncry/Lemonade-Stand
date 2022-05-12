@@ -112,62 +112,27 @@ def morning(morning_forecast):
     global glass_cost
     global sign_cost
 
+    sleep(1)
     print('\n\n\n\n')
-
-    sleep(3)
-    if day_count == 0:
-        print('> hello friend')
-        sleep(3)
-        print('> you are running a lemonade stand!')
-        sleep(3)
-        print('> the finest in the world')
-        sleep(3)
-        print('> nothing compares to the quality of your lemonade')
-        sleep(3)
-        print('\n> every morning you will set 3 things:')
-        sleep(3)
-        print('> 1. how many cups of lemonade you will make')
-        sleep(3)
-        print('> 2. how many advertising signs you will make')
-        sleep(3)
-        print('> 3. how much you will charge per glass of lemonade\n')
-        sleep(3)
-        print('> the amount of customers you attract depends on:')
-        sleep(3)
-        print('> 1. the weather -- is it a day that many would want to purchase lemonade?')
-        sleep(3)
-        print('> 2. the number of advertising signs you make -- how will people hear about you? will they reach a point where they have heard too much?')
-        sleep(4)
-        print('> 3. the amount you charge per glass of lemonade -- how much are people willing to pay?')
-        sleep(3)
-        print('> 4. your positive attidude and wonderful smile :DDDD -- people are more likely to come back if they are met with a friendly face!\n')
-        sleep(4)
-        print('> your mom (lol) gives you $2.00 to start off your business,')
-        sleep(3)
-        print('> and for the first couple days, your mom (lol) decides to pay for your sugar <3')
-        sleep(3)
-        print('> it costs $0.02 to make one cup of lemonade')
-        sleep(3)
-        print('> it costs $0.15 to post one advertising sign')
-        sleep(3)
-        print('> have fun!')
-        
-        #intro
-    elif day_count == 2:
-        print('> because your lemonade stand operates in a very windy location, all advertising signs get blown away overnight')
-        sleep(2)
-        print('> you will need to purchase new signs each day to still get advertised')
-        sleep(2)
+    sleep(1)
+    #intro
+    if day_count == 2:
         print('> your mom (lol) stopped paying for your sugar, but still supports you :]')
         glass_cost += 0.03
     elif day_count == 8:
         print('> lemonade is on sale today :D')
+        sleep(3)
+        print('> glass cost decreases by $0.02')
         glass_cost -= 0.02
     elif day_count == 9:
         print('> lemonade sale ends and the store pulls a sneaky one on you :|')
+        sleep(3)
+        print('> glass cost increases by $0.03')
         glass_cost += 0.03
     elif day_count == 11:
         print('> you start shopping at a different store and find amazing deals (capitalism moment)')
+        sleep(3)
+        print('> glass cost decreases by $0.02')
         glass_cost -= 0.02
     elif day_count == 15:
         print('> due to high demand, ad signs increase in price :O')
@@ -215,7 +180,7 @@ recursion depth count: {recursion_depth_count}
         sleep(3)
         print('> hello world')
         return
-    sleep(3)
+    sleep(2.5)
     
     # chance of rain
     if morning_forecast == 1:
@@ -318,21 +283,22 @@ def day(glasses_made, signs_made, price_charged, weather_state, chance_of_rain):
     
     # EVENTS
     # streetcrew handling
-    street_crew_chance = randint(0, 99)
-    if street_crew_chance >= 95:  # 5% chance
+    street_crew_chance = True#randint(0, 99)
+    if street_crew_chance: #>= 95:  # 5% chance
         revenue = (glasses_made * price_charged)
-        expenses = (signs_made * sign_cost) + (glasses_made + glass_cost)
+        expenses = (signs_made * sign_cost) + (glasses_made * glass_cost)
         profit = revenue - expenses
-        print('\n\na street crew (probably construction workers but whos to say) just finished their shift.\nthey bought all of your lemonade! STONKS')
-        revenue_report(glasses_made, signs_made, price_charged, revenue, expenses, profit, weather_state, chance_of_rain)
+        print('\n\na street crew just finished their shift.\nthey bought all of your lemonade! STONKS')
+        sleep(2)
+        revenue_report(glasses_made, signs_made, price_charged, revenue, expenses, profit, weather_state, chance_of_rain, glasses_made)
         return
     # thunderstorm handling
     if chance_of_rain > 90:  # 5.5¯% chance 
         revenue = 0
-        expenses = (signs_made * sign_cost) + (glasses_made + glass_cost)
+        expenses = (signs_made * sign_cost) + (glasses_made * glass_cost)
         profit = revenue - expenses
         print('\n\na thunderstorm booms overhead :(\nyou loose all revenue for today')
-        revenue_report(glasses_made, signs_made, price_charged, revenue, expenses, profit, weather_state, chance_of_rain)
+        revenue_report(glasses_made, signs_made, price_charged, revenue, expenses, profit, weather_state, chance_of_rain, glasses_made)
         return
 
     # ALGORITHM (check out algorithm.py for more information)
@@ -348,11 +314,11 @@ def day(glasses_made, signs_made, price_charged, weather_state, chance_of_rain):
     profit = revenue-expenses
 
     recursion_depth_count += 1
-    revenue_report(glasses_made, signs_made, price_charged, revenue, expenses, profit, weather_state, chance_of_rain)
+    revenue_report(glasses_made, signs_made, price_charged, revenue, expenses, profit, weather_state, chance_of_rain, min(glasses_made, glasses_sold))
     return
 
 # SUMMARY
-def revenue_report(fin_glasses, fin_signs, fin_price, fin_rev, fin_exp, fin_profit, fin_weather_state, chance_of_rain):
+def revenue_report(fin_glasses, fin_signs, fin_price, fin_rev, fin_exp, fin_profit, fin_weather_state, chance_of_rain, fin_glasses_sold):
     global total_revenue
     global total_expenses
     global total_profit
@@ -370,7 +336,7 @@ def revenue_report(fin_glasses, fin_signs, fin_price, fin_rev, fin_exp, fin_prof
     elif fin_weather_state == 3: fin_state = 'hot and dry'
 
     # revenue report
-    sleep(7.5)
+    sleep(5)
     print('\n\n')
     print(f'''
 >---------->
@@ -383,6 +349,8 @@ glasses made: {fin_glasses}
 advertisements made: {fin_signs}
 price charged: ${float("%.2f" % fin_price)}
 
+glasses sold: {fin_glasses_sold}
+
 revenue: ${float("%.2f" % fin_rev)}
 expenses: ${float("%.2f" % fin_exp)}
 profit: ${float("%.2f" % fin_profit)}
@@ -391,7 +359,7 @@ current balance ${float("%.2f" % total_profit)}
 >----------<
 ''')
 
-    end = input("\n[+] press enter to continue, or type 'esc' to close the lemonade stand")
+    end = input("\n[+] press enter to continue, or type 'esc' to close the lemonade stand\n> ")
     if end == 'esc':
         print(f'''
 >---------->
@@ -412,6 +380,54 @@ recursion depth count: {recursion_depth_count}
         return
 
 # DAY ONE
+print('\n\n> hello friend')
+sleep(3)
+print('> you will soon be running a lemonade stand')
+sleep(3)
+print('> the finest in the world')
+sleep(3)
+print('> nothing will compare to the quality of your lemonade')
+
+sleep(3)
+print('> would you like to hear your instructions?')
+skip = input("[+] press enter to continue, or type 'no' to skip\n> ")
+
+if not skip.lower().startswith('n'):
+    sleep(3)
+    print('\n> every morning you will set 3 things:')
+    sleep(3)
+    print('> 1. how many cups of lemonade you will make')
+    sleep(3)
+    print('> 2. how many advertising signs you will make')
+    sleep(3)
+    print('> 3. how much you will charge per glass of lemonade\n')
+    sleep(3)
+    print('> the amount of customers you attract depends on:')
+    sleep(3)
+    print('> 1. the weather -- is it a day that many would want to purchase lemonade?')
+    sleep(3)
+    print('> 2. the number of advertising signs you make -- how will people hear about you? will they reach a point where they have heard too much?')
+    sleep(4)
+    print('> 3. the amount you charge per glass of lemonade -- how much are people willing to pay?')
+    sleep(3)
+    print('> 4. your positive attidude and wonderful smile :DDDD -- people are more likely to come back if they are met with a friendly face!\n')
+    sleep(4)
+    print('> your mom (lol) gives you $2.00 to start off your business,')
+    sleep(3)
+    print('> and for the first couple days, your mom (lol) decides to pay for your sugar <3')
+    sleep(3)
+    print('> it costs $0.02 to make one cup of lemonade')
+    sleep(3)
+    print('> it costs $0.15 to post one advertising sign')
+    sleep(3)
+    print('> you will need to purchase fresh supplies each day (including signs because they get blown away overnight) to maintain the best quality possible')
+
+sleep(3)
+print('> running a lemonade stand takes a lot of work, so make sure you are up to the task!')
+sleep(3)
+print('> make sure to stay safe, and have fun!')
+
+
 morning(weather())
 
 pass
