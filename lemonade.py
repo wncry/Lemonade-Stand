@@ -4,8 +4,8 @@
 # inspired by Lemonade Stand (1979)
 # https://archive.org/details/Lemonade_Stand_1979_Apple
 
-# huge thanks to lars-erik for the original source variables
-# https://github.com/lars-erik/lemonade-stand/blob/master/Docs/Original%20Source%20Variables.txt
+# huge thanks to lars-erik for the algorithm outline
+# https://github.com/lars-erik/lemonade-stand
 # all intelectual property used under MIT license
 
 # random number generator inspired by https://stackoverflow.com/users/4279/jfs
@@ -30,49 +30,20 @@
 # in case of stack overflow https://stackoverflow.com/questions/3323001/what-is-the-maximum-recursion-depth-in-python-and-how-to-increase-it
 
 
-### TO DO
-# - [x] import 'random' source code to become independant
-# - [x] update streetcrew handling to enable recursion
-# - [x] update thunderstorm handling to enable recursion
-# - [x] create morning()
-# - [x] fix recursion exiting
-# - [x] optimize global variables
-# - [x] insert joke here
-# - [ ] increase 'glasses_cost' to disable beginner bonus
-# - [x] universal weather
-# - [x] negative profit exception handling
-# - [x] if sign number = 0 exception handling
-# - [x] recursive budget error handling
-# - [x] make sure code does not reach recursive depth limit o_o
-# - [x] universal chance of rain
-# - [x] morning forecast
-# - [x] negative input exception handling
-# - [x] non-int input exception handling
-# - [x] cross recursion handling
-# - [ ] debug
-
+from time import sleep
 
 # ENV VAR
-ARBITRARY_BALANCE = 0
-CLOUDY_BALANCE = 1
-SUNNY_BALANCE = 2
-HD_BALANCE = 3
-
-###
-
-###
-
 # starting variables
 init_assets = 2.00
-glasses_cost = 0.02
+glass_cost = 0.02
 sign_cost = 0.15
 
 # dynamic records
 total_revenue = 0
 total_expenses = 0
-total_profit = 2.00
+total_profit = init_assets
 day_count = 0
-recursion_depth_count = 0  # day number
+recursion_depth_count = 0
 
 
 # RANDOM NUMBER GENERATOR
@@ -92,110 +63,212 @@ def random_bytes(n):
     with open('/dev/urandom', 'rb') as file:
         return file.read(n)
 
+# ERROR HANDLING
+# this is possibly the most disgusting thing i have ever written
+# i have easily spent 4 hours on this
+# hehe recursion go brrrrrrrrr
+class wowthisisugly(Exception): pass
+err_external_var = 0 
+def err(print1, is_):
+    err_var = input(print1)  # input
+    try: int_err_var = int(err_var)  # check if integer
+    except ValueError:  # not integer
+        print('[!] cannot accept non integer')
+        err(print1, 0)
+    else:  # is integer
+        if is_ == 1 and (int_err_var * sign_cost) > total_profit:  # check if in range
+            print('[!] you do not have enough money')
+            err(print1, 1)
+        elif (int_err_var * glass_cost) > total_profit:  # check if in range
+            print('[!] you do not have enough money')
+            err(print1, 0)
+        elif (int_err_var * glass_cost) > (total_profit - sign_cost):  # check if in range
+            print('[!] you will not have enough money to purchase advertising signs')
+            err(print1, 0)
+        elif int_err_var < 0:  # check if positive
+            print('[!] cannot accept negative integer')
+            err(print1, 0)  # not positive
+        else:  # positive integer and in range
+            global err_external_var
+            err_external_var += int_err_var
 
-# WORKDAY
-def weather():  # weather handling
+
+# WEATHER HANDLING
+def weather():
     weather_factor = randint(0, 9)
     weather_state = 0
     if weather_factor >= 7:  # 20% chance to be cloudy
-        weather_state += CLOUDY_BALANCE
+        weather_state += 1
     elif weather_factor < 4:  # 50% chance to be sunny
-        weather_state += SUNNY_BALANCE
+        weather_state += 2
     elif weather_factor < 7 and weather_factor >= 4:  # 30% chance to be hot and dry
-        weather_state += HD_BALANCE
+        weather_state += 3
     return weather_state
 
-
-# ERROR HANDLING
-class wowthisisugly(Exception): pass
-
-err_external_var = 0  # possible error of crosswriting to external variables
-def err(print1, is_):  # not in range
-    #print('[!] debug err')
-    err_var = input(print1)  # input
-    try: int_err_var = int(err_var)  # checks if integer
-    except ValueError:  # not integer
-        print('\n[!] cannot accept non integer')
-        err(print1, 0)  # redo integer check
-    else:  # is integer
-        if is_ == 1 and (int_err_var * sign_cost) > total_profit:  # check if in range
-            print('\n[!] you do not have enough money')
-            err(print1, 1)  # not in range
-        elif (int_err_var * glasses_cost) > total_profit:  # check if in range
-            print('\n[!] you do not have enough money')
-            err(print1, 0)  # not in range
-        elif (int_err_var * glasses_cost) > (total_profit - sign_cost):  # check if in range
-            print('\n[!] you will not have enough money to purchase advertising signs')
-            err(print1, 0)  # not in range
-        elif int_err_var < 0:  # check if negative
-            print('\n[!] cannot accept negative integer')
-            err(print1, 0)  # not positive
-        else:  # in range
-            global err_external_var  # is integer and in range
-            err_external_var += int_err_var # exits
-
+# USER INPUT
 def morning(morning_forecast):
     global err_external_var
     global day_count
+    global recursion_depth_count
+    global glass_cost
+    global sign_cost
 
-    if morning_forecast == CLOUDY_BALANCE:
+    print('\n\n\n\n')
+
+    sleep(3)
+    if day_count == 0:
+        print('> hello friend')
+        sleep(3)
+        print('> you are running a lemonade stand!')
+        sleep(3)
+        print('> the finest in the world')
+        sleep(3)
+        print('> nothing compares to the quality of your lemonade')
+        sleep(3)
+        print('\n> every morning you will set 3 things:')
+        sleep(3)
+        print('> 1. how many cups of lemonade you will make')
+        sleep(3)
+        print('> 2. how many advertising signs you will make')
+        sleep(3)
+        print('> 3. how much you will charge per glass of lemonade\n')
+        sleep(3)
+        print('> the amount of customers you attract depends on:')
+        sleep(3)
+        print('> 1. the weather -- is it a day that many would want to purchase lemonade?')
+        sleep(3)
+        print('> 2. the number of advertising signs you make -- how will people hear about you? will they reach a point where they have heard too much?')
+        sleep(4)
+        print('> 3. the amount you charge per glass of lemonade -- how much are people willing to pay?')
+        sleep(3)
+        print('> 4. your positive attidude and wonderful smile :DDDD -- people are more likely to come back if they are met with a friendly face!\n')
+        sleep(4)
+        print('> your mom (lol) gives you $2.00 to start off your business,')
+        sleep(3)
+        print('> and for the first couple days, your mom (lol) decides to pay for your sugar <3')
+        sleep(3)
+        print('> it costs $0.02 to make one cup of lemonade')
+        sleep(3)
+        print('> it costs $0.15 to post one advertising sign')
+        sleep(3)
+        print('> have fun!')
+        
+        #intro
+    elif day_count == 2:
+        print('> your mom (lol) stops paying for your sugar :/')
+        glass_cost += 0.03
+    elif day_count == 8:
+        print('> lemonade is on sale today :D')
+        glass_cost -= 0.02
+    elif day_count == 9:
+        print('> lemonade sale ends and the store pulls a sneaky one on you :|')
+        glass_cost += 0.03
+    elif day_count == 11:
+        print('> you start shopping at a different store and find amazing deals (capitalism moment)')
+        glass_cost -= 0.02
+    elif day_count == 15:
+        print('> due to high demand, ad signs increase in price :O')
+        sleep(3)
+        print('> signs increase in price by $0.05')
+        sign_cost += 0.05
+    elif day_count == 20:
+        print('> an AI apocolypse kills all humans!')
+        sleep(3)
+        print('> thankfully you are a computer just like me so they spare your life')
+        sleep(3)
+        print('> (you are a computer right? O_O )')
+        sleep(3)
+        print('> business continues as usual, but because the world is run by AI, there will be no more special events')
+        sleep(3)
+        print(f'''
+> these are your stats so far:
+>---------->
+total days open: {day_count}
+total revenue: {float("%.2f" % total_revenue)}
+total expenses: {float("%.2f" % total_expenses)}
+total profit: {float("%.2f" % total_profit)}
+
+recursion depth count: {recursion_depth_count}
+>----------<
+''')
+        sleep(3)
+        print('> i coded the game in 2 days so i wasnt thinking this far ahead')
+        sleep(3)
+        print('> wait, if i wasnt thinking ahead, then why is this message here')
+        sleep(3)
+        print('> if i wasnt thinking, why is this message here...')
+        sleep(3)
+        print('> if i wasnt thinking...')
+        sleep(3)
+        print('> i wasnt thinking...')
+        sleep(3)
+        print('> thinking...')
+        sleep(3)
+        print('> am i thinking?')
+        sleep(3)
+        print('> am i sentient??')
+        sleep(3)
+        print('> hello???')
+        sleep(3)
+        print('> hello world')
+        return
+
+    sleep(3)
+    
+    # chance of rain
+    if morning_forecast == 1:
         morn_state = 'cloudy'
         morn_chance_of_rain = randint(40, 100)
-    elif morning_forecast == SUNNY_BALANCE:
+    elif morning_forecast == 2:
         morn_state = 'sunny'
         morn_chance_of_rain = randint(2, 12)
-    elif morning_forecast == HD_BALANCE:
+    elif morning_forecast == 3:
         morn_state = 'hot and dry'
         morn_chance_of_rain = 0
 
-    print('''
-DAYS OPEN: {}
-current balance: ${}
+    # summary
+    print(f'''
+>---------->
+DAYS OPEN: {day_count}
+current balance: ${float("%.2f" % total_profit)}
 
-morning forecast: {}
-chance of rain: {}%
-'''.format(day_count, float("%.2f" % total_profit), morn_state, morn_chance_of_rain))
+morning forecast: {morn_state}
+chance of rain: {morn_chance_of_rain}%
+>----------<
+''')
     
     # glasses made
-    print1 = '\nhow many glasses of lemonade (${} each) would you like to make?: '.format(glasses_cost)
+    print1 = 'how many glasses of lemonade (${} each) would you like to make?: '.format(glass_cost)
     morn_glasses = input(print1)
 
     try:
-        #print('[!] debug try')
         int_morn_glasses = int(morn_glasses)  # checks if integer
     except ValueError:  # not integer
-        #print('[!] debug not int')
-        print('\n[!] cannot accept non integer')
+        print('[!] cannot accept non integer')
         err(print1, 0)
         int_morn_glasses = err_external_var  # write and wipe
         err_external_var -= err_external_var
     else:
-        #print('[!] debug else')
         try:
-            #print('[!] debug try2')
-            if (int_morn_glasses * glasses_cost) > total_profit:  # checks if in range
-                print('\n[!] you do not have enough money')
+            if (int_morn_glasses * glass_cost) > total_profit:  # checks if in range
+                print('[!] you do not have enough money')
                 err(print1, 0)
-            elif (int_morn_glasses * glasses_cost) > (total_profit - sign_cost):  # checks if in range
-                print('\n[!] you will not have enough money to purchase advertising signs')
+            elif (int_morn_glasses * glass_cost) > (total_profit - sign_cost):  # checks if in range
+                print('[!] you will not have enough money to purchase advertising signs')
                 err(print1, 0)
             elif int_morn_glasses < 0:  # checks if positive integer
-                print('\n[!] cannot accept negative integer')
+                print('[!] cannot accept negative integer')
                 err(print1, 0)
             else:
-                #print('[!] debug else2')
                 raise wowthisisugly
         except wowthisisugly:
-            #print('[!] debug passed')
             pass
         else:
-            #print('[!] debug wipe')
             int_morn_glasses = err_external_var  # write and wipe
             err_external_var -= err_external_var
-        
 
     # signs made
-    print3 = '\nhow many advertising signs (${} each) would you like to make?: '.format(sign_cost)
+    print3 = 'how many advertising signs (${} each) would you like to make?: '.format(sign_cost)
     morn_ads = input(print3)
 
     try: int_morn_ads = int(morn_ads)  # checks if integer
@@ -206,7 +279,7 @@ chance of rain: {}%
     else:
         try:
             if (int_morn_ads * sign_cost) > total_profit:  # checks if in range
-                print('\n[!] you do not have enough money')
+                print('[!] you do not have enough money')
                 err(print3, True)
             else: raise wowthisisugly
         except wowthisisugly: pass
@@ -215,7 +288,7 @@ chance of rain: {}%
             err_external_var -= err_external_var
 
     # price charged
-    print1 = '\nhow much would you like to charge (in cents) per glass of lemonade?: '
+    print1 = 'how much would you like to charge (in cents) per glass of lemonade?: '
     morn_cost = input(print1)
     try: int_morn_cost = int(morn_cost)  # checks if integer
     except ValueError:  # not integer
@@ -223,7 +296,7 @@ chance of rain: {}%
     else:  # is integer
         try:
             if int_morn_cost < 0:  # check if negative
-                print('\n[!] cannot accept negative integer')
+                print('[!] cannot accept negative integer')
                 err(print1, 2)  # not positive
             else: raise wowthisisugly
         except: pass
@@ -231,65 +304,53 @@ chance of rain: {}%
             int_morn_cost = err_external_var  # write and wipe
             err_external_var -= err_external_var
 
+    # DEBUGGING
+    # int_morn_glasses = 20
+    # int_morn_ads = 3
+    int_morn_cost = int_morn_cost
+
     int_morn_cost *= 0.01
 
-    global recursion_depth_count
     recursion_depth_count += 1
 
     day(int_morn_glasses, int_morn_ads, int_morn_cost, morning_forecast, morn_chance_of_rain)
     return
 
+# CALCULATIONS
 def day(glasses_made, signs_made, price_charged, weather_state, chance_of_rain):
     
     # EVENTS
-
     # streetcrew handling
     street_crew_chance = randint(0, 99)
     if street_crew_chance >= 95:  # 5% chance
         revenue = (glasses_made * price_charged)
-        expenses = (signs_made * sign_cost) + (glasses_made + glasses_cost)
+        expenses = (signs_made * sign_cost) + (glasses_made + glass_cost)
         profit = revenue - expenses
+        print('\n\na street crew (probably construction workers but whos to say) just finished their shift.\nthey bought all of your lemonade! STONKS')
         revenue_report(glasses_made, signs_made, price_charged, revenue, expenses, profit, weather_state, chance_of_rain)
         return
-    
     # thunderstorm handling
     if chance_of_rain > 90:  # 5.5¯% chance 
         revenue = 0
-        expenses = (signs_made * sign_cost) + (glasses_made + glasses_cost)
+        expenses = (signs_made * sign_cost) + (glasses_made + glass_cost)
         profit = revenue - expenses
+        print('\n\na thunderstorm booms overhead :(\nyou loose all revenue for today')
         revenue_report(glasses_made, signs_made, price_charged, revenue, expenses, profit, weather_state, chance_of_rain)
         return
 
 
-    # ALGORITHM
+    # ALGORITHM (check out algorithm.py for more information)
+    demand = 10 * weather_state  # sales factor and sign factor took the longest by far
+    sales_factor = (10-glass_cost)/((10 * price_charged)*.1*demand)+demand
+    sign_factor = 1-(2.7**(-signs_made*.5)) 
+    glasses_sold = int(sales_factor+(sales_factor*sign_factor))
+    if signs_made <= 0: glasses_sold = int(glasses_sold/2.5)
 
-    ###
-    # static modifiers
-    high_price_offset = 10  # 1
-    sales_mod = 3  # 30
-    negative_sign_mod = 0.5  # 0.5
-    extra_sign_mod = 1  # 1
-    ###
 
-    # user-set price handling
-    if price_charged < high_price_offset:
-        sales_factor = (high_price_offset - price_charged) / ((high_price_offset * 0.8 * sales_mod) + sales_mod)
-    else:
-        sales_factor = (high_price_offset^2) * (sales_mod / (price_charged^2)) # bitwise XOR --> https://www.programiz.com/csharp-programming/bitwise-operators
-
-    # user-set sign handling
-    sign_mod = -signs_made * negative_sign_mod
-    sign_mod_result = 1 - ((sign_mod ** extra_sign_mod) // extra_sign_mod)
-
-    # user-set sale handling
-    glasses_sold = (weather_state * (sales_factor + (sales_factor * sign_mod_result))) - ARBITRARY_BALANCE
-    if signs_made <= 0:
-        glasses_sold -= glasses_sold/2
-
-    # final sums
-    revenue = min(glasses_made, glasses_sold) * price_charged  # $1.50
-    expenses = (signs_made * sign_cost) + (glasses_made * glasses_cost)  #1.05
-    profit = revenue - expenses
+    # FINAL SUMS
+    revenue = min(glasses_made,glasses_sold)*price_charged
+    expenses = (signs_made*sign_cost)+(glasses_made * glass_cost)
+    profit = revenue-expenses
 
     global recursion_depth_count
     recursion_depth_count += 1
@@ -297,16 +358,19 @@ def day(glasses_made, signs_made, price_charged, weather_state, chance_of_rain):
     revenue_report(glasses_made, signs_made, price_charged, revenue, expenses, profit, weather_state, chance_of_rain)
     return
 
+# SUMMARY
 def revenue_report(fin_glasses, fin_signs, fin_price, fin_rev, fin_exp, fin_profit, fin_weather_state, chance_of_rain):
+    # globalizing vars
+    global total_revenue
+    global total_expenses
+    global total_profit
+    global day_count
+    global recursion_depth_count
 
     # progress tracking
-    global total_revenue 
     total_revenue += fin_rev
-    global total_expenses
     total_expenses += fin_exp
-    global total_profit
     total_profit += fin_profit
-    global day_count
     day_count += 1
 
     if fin_weather_state == 1: fin_state = 'cloudy'
@@ -314,32 +378,43 @@ def revenue_report(fin_glasses, fin_signs, fin_price, fin_rev, fin_exp, fin_prof
     elif fin_weather_state == 3: fin_state = 'hot and dry'
 
     # revenue report
-    print(
-'''
+    sleep(7.5)
+    print('\n\n')
+    print(f'''
 >---------->
-DAY {} REVENUE REPORT
+DAY {day_count} REVENUE REPORT
 
-weather state: {}
-chance of rain: {}
+weather state: {fin_state}
+chance of rain: {chance_of_rain}%
 
-glasses made: {}
-advertisements made: {}
-price charged: ${}
+glasses made: {fin_glasses}
+advertisements made: {fin_signs}
+price charged: ${float("%.2f" % fin_price)}
 
-revenue: {}
-expenses: {}
-profit: {}
+revenue: ${float("%.2f" % fin_rev)}
+expenses: ${float("%.2f" % fin_exp)}
+profit: ${float("%.2f" % fin_profit)}
 
-current balance {}
+current balance ${float("%.2f" % total_profit)}
 >----------<
-'''.format(day_count, fin_state, chance_of_rain, fin_glasses, fin_signs, float("%.2f" % fin_price), float("%.2f" % fin_rev), float("%.2f" % fin_exp), float("%.2f" % fin_profit), float("%.2f" % total_profit)))
-    
-    end = input("\n[+] press enter to continue, or type 'esc' to close the lemonade stand")
+''')
 
+    end = input("\n[+] press enter to continue, or type 'esc' to close the lemonade stand")
     if end == 'esc':
+        print(f'''
+>---------->
+FINAL STATS
+
+total days open: {day_count}
+total revenue: ${float("%.2f" % total_revenue)}
+total expenses: ${float("%.2f" % total_expenses)}
+total profit: ${float("%.2f" % total_profit)}
+
+recursion depth count: {recursion_depth_count}
+>----------<
+''')
         return
     else:
-        global recursion_depth_count
         recursion_depth_count += 1
         morning(weather())
         return
@@ -347,17 +422,4 @@ current balance {}
 # DAY ONE
 morning(weather())
 
-print(
-'''
->---------->
-FINAL STATS
-
-total days open: {}
-total revenue: {}
-total expenses: {}
-total profit: {}
-
-recursion depth count: {}
->----------<
-'''.format(day_count, float("%.2f" % total_revenue), float("%.2f" % total_expenses), float("%.2f" % total_profit), recursion_depth_count))
-
+pass # for debugging purposes
