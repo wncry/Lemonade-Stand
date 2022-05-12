@@ -301,12 +301,14 @@ def day(glasses_made, signs_made, price_charged, weather_state, chance_of_rain):
         revenue_report(glasses_made, signs_made, price_charged, revenue, expenses, profit, weather_state, chance_of_rain, glasses_made)
         return
 
-    # ALGORITHM (check out algorithm.py for more information)
-    demand = 10 * weather_state  # sales factor and sign factor took the longest by far
-    sales_factor = (10-glass_cost)/((10 * price_charged)*.1*demand)+demand
-    sign_factor = 1-(2.7**(-signs_made*.5)) 
-    glasses_sold = int(sales_factor+(sales_factor*sign_factor))
-    if signs_made <= 0: glasses_sold = int(glasses_sold/2.5)
+    if price_charged <= 0: glasses_sold = 0
+    else:
+        # ALGORITHM (check out algorithm.py for more information)
+        demand = 10 * weather_state  # sales factor and sign factor took the longest by far
+        sales_factor = (10-glass_cost)/((10*price_charged)*.1*demand)+demand
+        sign_factor = 1-(2.7**(-signs_made*.5)) 
+        glasses_sold = int(sales_factor+(sales_factor*sign_factor))
+        if signs_made <= 0: glasses_sold = int(glasses_sold/2.5)
 
     # FINAL SUMS
     revenue = min(glasses_made,glasses_sold)*price_charged
