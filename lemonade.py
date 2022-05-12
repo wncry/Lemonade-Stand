@@ -8,6 +8,8 @@
 # https://github.com/lars-erik/lemonade-stand
 # all intelectual property used under MIT license
 
+# thanks to my sister for testing the game :)
+
 # random number generator inspired by https://stackoverflow.com/users/4279/jfs
 # on https://stackoverflow.com/questions/22950768/random-int-without-importing-random
 # by modifying the random.py source code https://hg.python.org/cpython/file/tip/Lib/random.py
