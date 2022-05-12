@@ -289,7 +289,7 @@ def day(glasses_made, signs_made, price_charged, weather_state, chance_of_rain):
         expenses = (signs_made * sign_cost) + (glasses_made * glass_cost)
         profit = revenue - expenses
         sleep(2)
-        print('\n\na street crew just finished their shift.\nthey bought all of your lemonade! STONKS')
+        print('\n\n> a street crew just finished their shift.\nthey bought all of your lemonade! STONKS')
         revenue_report(glasses_made, signs_made, price_charged, revenue, expenses, profit, weather_state, chance_of_rain, glasses_made)
         return
     # thunderstorm handling
@@ -297,7 +297,8 @@ def day(glasses_made, signs_made, price_charged, weather_state, chance_of_rain):
         revenue = 0
         expenses = (signs_made * sign_cost) + (glasses_made * glass_cost)
         profit = revenue - expenses
-        print('\n\na thunderstorm booms overhead :(\nyou loose all revenue for today')
+        sleep(2)
+        print('\n\n> a thunderstorm flashes overhead and rain floods your lemonade stand\nyou loose all revenue for today :(')
         revenue_report(glasses_made, signs_made, price_charged, revenue, expenses, profit, weather_state, chance_of_rain, glasses_made)
         return
 
